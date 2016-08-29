@@ -1,0 +1,18 @@
+{
+  "caregen": {
+    "dbConfig": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "caregen",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "emailConfig": {
+    "emailUser": "simplifiedit@hotmail.com",
+      "emailPass": "isaiah62"
+  },
+  "serverURL": {
+     "hostURL" : "http://localhost:3000/"
+  }
+ }
+}

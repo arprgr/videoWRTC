@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" id="9lessons-demo">
+<head>
+	<title>:: Media :: CODINGSAVVY.COM</title>
+	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<style>
+.videostream, #cssfilters-stream{
+  background: rgba(255,255,255,0.5);
+  border: 1px solid #ccc;
+}
+.videostream, #cssfilters-stream, #screenshot {
+  width: 307px;
+  height: 250px;
+}
+www.html5rocks.com/media="all"
+audio, canvas, video {
+  display: inline-block;
+}
+.content-wrapper button {
+  background: #333;
+  color: #FFF;
+  border-radius: 4px;
+  border: 0;
+  padding: 10px 14px;
+}
+www.html5rocks.com/media="all"
+button, input[type="button"], input[type="reset"], input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+button, input {
+  line-height: normal;
+}
+
+button, input, select, textarea {
+  font-size: 100%;
+  margin: 0;
+  vertical-align: baseline;
+}
+body, button, input, select, textarea {
+  font-family: sans-serif;
+  color: #222;
+}
+user agent stylesheetinput[type="button" i], input[type="submit" i], input[type="reset" i], input[type="file" i]::-webkit-file-upload-button, button {
+  padding: 1px 6px;
+}
+ .content-wrapper button {
+  background: #333;
+  color: #FFF;
+  border-radius: 4px;
+  border: 0;
+  padding: 10px 14px;
+}
+</style>
+	
+<script type="text/javascript" src="https://gc.kis.scr.kaspersky-labs.com/D06E73A9-2549-9449-BC3A-DA9318545387/main.js" charset="UTF-8"></script></head>
+<body>
+<div class="content-wrapper" style="text-align:center;">
+  <video id="basic-stream" class="videostream" autoplay=""></video>
+  <p><button id="capture-button">Capture video</button> <button id="stop-button">Stop</button></p>
+  <br/>
+  <video id="screenshot-stream" class="videostream" autoplay="" src=""></video>
+  <img id="screenshot" src="data:," height="0" width="0">
+  <canvas id="screenshot-canvas" style="display:none;" width="0" height="0"></canvas>
+  <p><button id="screenshot-button">Take Shot</button> <button id="screenshot-stop-button">Stop</button></p>
+</div>
+
+  
+
+<script>
+function errorCallback(e) {
+  if (e.code == 1) {
+    alert('User denied access to their camera');
+  } else {
+    alert('getUserMedia() not supported in your browser.');
+  }
+  //e.target.src = 'http://www.html5rocks.com/en/tutorials/video/basics/Chrome_ImF.ogv';
+}
+
+(function() {
+var video = document.querySelector('#basic-stream');
+var button = document.querySelector('#capture-button');
+var localMediaStream = null;
+
+button.addEventListener('click', function(e) {
+  if (navigator.getUserMedia) {
+    navigator.getUserMedia('video', function(stream) {
+      video.src = stream;
+      video.controls = true;
+      localMediaStream = stream;
+    }, errorCallback);
+  } else if (navigator.webkitGetUserMedia) {
+    navigator.webkitGetUserMedia({video: true}, function(stream) {
+      video.src = window.URL.createObjectURL(stream);
+      video.controls = true;
+      localMediaStream = stream;
+    }, errorCallback);
+  } else {
+    errorCallback({target: video});
+  }
+}, false);
+
+document.querySelector('#stop-button').addEventListener('click', function(e) {
+  video.pause();
+  localMediaStream.stop(); // Doesn't do anything in Chrome.
+}, false);
+})();
+
+(function() {
+var video = document.querySelector('#screenshot-stream');
+var button = document.querySelector('#screenshot-button');
+var canvas = document.querySelector('#screenshot-canvas');
+var img = document.querySelector('#screenshot');
+var ctx = canvas.getContext('2d');
+var localMediaStream = null;
+
+function sizeCanvas() {
+  // video.onloadedmetadata not firing in Chrome so we have to hack.
+  // See crbug.com/110938.
+  setTimeout(function() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    img.height = video.videoHeight;
+    img.width = video.videoWidth;
+  }, 100);
+}
+
+function snapshot() {
+  ctx.drawImage(video, 0, 0);
+  img.src = canvas.toDataURL('image/webp');
+}
+
+
+
+video.addEventListener('click', snapshot, false);
+
+document.querySelector('#screenshot-stop-button').addEventListener('click', function(e) {
+  video.pause();
+  localMediaStream.stop(); // Doesn't do anything in Chrome.
+}, false);
+})();
+
+(function() {
+var video = document.querySelector('#cssfilters-stream');
+var button = document.querySelector('#capture-button2');
+var localMediaStream = null;
+
+var idx = 0;
+var filters = [
+  'grayscale',
+  'sepia',
+  'blur',
+  'brightness',
+  'contrast',
+  'hue-rotate', 'hue-rotate2', 'hue-rotate3',
+  'saturate',
+  'invert',
+  ''
+];
+
+function changeFilter(e) {
+  var el = e.target;
+  el.className = '';
+  var effect = filters[idx++ % filters.length];
+  if (effect) {
+    el.classList.add(effect);
+  }
+}
+
+button.addEventListener('click', function(e) {
+  if (navigator.getUserMedia) {
+    navigator.getUserMedia('video, audio', function(stream) {
+      video.src = stream;
+      localMediaStream = stream;
+    }, errorCallback);
+  } else if (navigator.webkitGetUserMedia) {
+    navigator.webkitGetUserMedia({video: true}, function(stream) {
+      video.src = window.URL.createObjectURL(stream);
+      localMediaStream = stream;
+    }, errorCallback);
+  } else {
+    errorCallback({target: video});
+  }
+}, false);
+
+document.querySelector('#stop-button2').addEventListener('click', function(e) {
+  video.pause();
+  localMediaStream.stop(); // Doesn't do anything in Chrome.
+}, false);
+
+video.addEventListener('click', changeFilter, false);
+})();
+</script>
+</body>
+</html>	

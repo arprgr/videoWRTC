@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var upload = require('./routes/fileUpload');
 var getAllVideos = require('./routes/getAllVideos');
+var uploadCloud = require('./routes/cloudUpload');
 
 var upperBound = '1gb';
 
@@ -34,6 +35,8 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/upload', upload);
 app.use('/getAllVideos', getAllVideos);
+app.use('/uploadCloud', uploadCloud);
+
 
 
 
